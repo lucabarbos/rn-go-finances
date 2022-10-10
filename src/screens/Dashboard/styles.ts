@@ -68,6 +68,8 @@ export const UserName = styled.Text`
   line-height: ${RFValue(24)}px;
 `;
 
+export const LogoutButton = styled.TouchableOpacity``;
+
 export const Icon = styled(Feather)`
   color: ${({ theme }) => theme.colors.secondary};
   font-size: ${RFValue(24)}px;
