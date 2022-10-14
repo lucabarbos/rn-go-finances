@@ -14,6 +14,7 @@ import theme from "./src/global/styles/theme";
 import { StatusBar } from "expo-status-bar";
 import { AppRoutes } from "./src/routes/app.routes";
 import { SignIn } from "./src/screens/SignIn";
+import { AuthProvider } from "./src/hooks/auth";
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -30,7 +31,9 @@ export default function App() {
     <ThemeProvider theme={theme}>
       <StatusBar backgroundColor={theme.colors.primary} style="light" />
       <NavigationContainer>
-        <SignIn />
+        <AuthProvider>
+          <SignIn />
+        </AuthProvider>
       </NavigationContainer>
     </ThemeProvider>
   );
