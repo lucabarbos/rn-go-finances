@@ -5,11 +5,18 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import uuid from "react-native-uuid";
+import { useAuth } from "../../hooks/auth";
+import {
+  NavigationProp,
+  ParamListBase,
+  useNavigation,
+} from "@react-navigation/native";
 
 import { Button } from "../../components/Form/Button";
 import { CategorySelectButton } from "../../components/Form/CategorySelectButton";
 import { TransactionTypeButton } from "../../components/Form/TransactionTypeButton";
 import { CategorySelect } from "../CategorySelect";
+import { InputForm } from "../../components/Form/InputForm";
 
 import {
   Container,
@@ -19,12 +26,6 @@ import {
   Title,
   TransactionsTypes,
 } from "./styles";
-import { InputForm } from "../../components/Form/InputForm";
-import {
-  NavigationProp,
-  ParamListBase,
-  useNavigation,
-} from "@react-navigation/native";
 
 interface FormData {
   name: string;
@@ -35,12 +36,14 @@ export function Register() {
   const [transactionType, setTransactionType] = useState("");
   const [categoryModalOpen, setCategoryModalOpen] = useState(false);
 
+  const { user } = useAuth();
+
   const [category, setCategory] = useState({
     key: "category",
     name: "Categoria",
   });
 
-  const collectionKey = "@gofinances:transactions";
+  const collectionKey = `@gofinances:transactions_user:${user.id}`;
 
   const { navigate }: NavigationProp<ParamListBase> = useNavigation();
 
