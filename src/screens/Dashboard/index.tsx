@@ -1,10 +1,9 @@
 import React, { useCallback, useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { HighlightCard } from "../../components/HighlightCard";
-import {
-  TransactionCardProps,
-  TransactionCard,
-} from "../../components/TransactionCard";
+import { useFocusEffect } from "@react-navigation/native";
+import { ActivityIndicator } from "react-native";
+import { useTheme } from "styled-components/native";
+
 import {
   Container,
   Header,
@@ -22,9 +21,14 @@ import {
   LogoutButton,
   LoadContainer,
 } from "./styles";
-import { useFocusEffect } from "@react-navigation/native";
-import { ActivityIndicator } from "react-native";
-import { useTheme } from "styled-components/native";
+
+import { HighlightCard } from "../../components/HighlightCard";
+import {
+  TransactionCardProps,
+  TransactionCard,
+} from "../../components/TransactionCard";
+
+import { useAuth } from "../../hooks/auth";
 
 export interface DataListProps extends TransactionCardProps {
   id: string;
@@ -49,6 +53,8 @@ export function Dashboard() {
   );
 
   const theme = useTheme();
+
+  const { signOut, user } = useAuth();
 
   function getLastTransactionDate(
     collection: DataListProps[],
@@ -168,15 +174,15 @@ export function Dashboard() {
           <Header>
             <UserWrapper>
               <UserInfo>
-                <Photo source={{ uri: "http://github.com/lucabarbos.png" }} />
+                <Photo source={{ uri: user.photo }} />
 
                 <User>
                   <UserGreeting>Olá,</UserGreeting>
-                  <UserName>Lucas</UserName>
+                  <UserName>{user.name}</UserName>
                 </User>
               </UserInfo>
 
-              <LogoutButton onPress={() => {}}>
+              <LogoutButton onPress={signOut}>
                 <Icon name="power" />
               </LogoutButton>
             </UserWrapper>
