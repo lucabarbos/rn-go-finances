@@ -20,6 +20,7 @@ import {
   TransactionList,
   LogoutButton,
   LoadContainer,
+  TransactionListEmpty,
 } from "./styles";
 
 import { HighlightCard } from "../../components/HighlightCard";
@@ -60,17 +61,25 @@ export function Dashboard() {
     collection: DataListProps[],
     type: "positive" | "negative"
   ) {
-    const lastTransaction = Math.max.apply(
-      Math,
-      collection
-        .filter((transaction) => transaction.type === type)
-        .map((transaction) => new Date(transaction.date).getTime())
+    const collectionFiltered = collection.filter((c) => c.type === type);
+
+    if (collectionFiltered.length === 0) {
+      return 0;
+    }
+
+    const lastTransaction = new Date(
+      Math.max.apply(
+        Math,
+        collectionFiltered.map((transaction) =>
+          new Date(transaction.date).getTime()
+        )
+      )
     );
 
-    return Intl.DateTimeFormat("pt-BR", {
-      day: "2-digit",
-      month: "long",
-    }).format(new Date(lastTransaction));
+    return `${lastTransaction.getDate()} de ${lastTransaction.toLocaleString(
+      "pt-BR",
+      { day: "2-digit", month: "long" }
+    )}`;
   }
 
   async function loadTransactions() {
@@ -121,7 +130,10 @@ export function Dashboard() {
         "negative"
       );
 
-      const totalInterval = `01 à ${lastTransactionExpensives}`;
+      const totalInterval =
+        lastTransactionExpensives === 0
+          ? "Não há transações cadastradas"
+          : `01 à ${lastTransactionExpensives}`;
 
       setHighlightData({
         entries: {
@@ -129,14 +141,20 @@ export function Dashboard() {
             style: "currency",
             currency: "BRL",
           }),
-          lastTransaction: `Última entrada dia ${lastTransactionEntries}`,
+          lastTransaction:
+            lastTransactionEntries === 0
+              ? "Não há transações cadastradas"
+              : `Última entrada dia ${lastTransactionEntries}`,
         },
         expensive: {
           amount: expensiveTotal.toLocaleString("pt-BR", {
             style: "currency",
             currency: "BRL",
           }),
-          lastTransaction: `Última saída dia ${lastTransactionExpensives}`,
+          lastTransaction:
+            lastTransactionExpensives === 0
+              ? "Não há transações cadastradas"
+              : `Última saída dia ${lastTransactionExpensives}`,
         },
         total: {
           amount: (entriesTotal - expensiveTotal).toLocaleString("pt-BR", {
@@ -216,6 +234,11 @@ export function Dashboard() {
               data={transactions}
               keyExtractor={(item) => item.id}
               renderItem={({ item }) => <TransactionCard data={item} />}
+              ListEmptyComponent={
+                <TransactionListEmpty>
+                  Não há transações cadastradas
+                </TransactionListEmpty>
+              }
             />
           </Transactions>
         </>

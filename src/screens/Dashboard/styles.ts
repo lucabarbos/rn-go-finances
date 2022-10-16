@@ -109,6 +109,13 @@ export const TransactionList = styled(
   contentContainerStyle: { paddingBottom: getBottomSpace() },
 })``;
 
+export const TransactionListEmpty = styled.Text`
+  font-size: ${RFValue(14)}px;
+  font-family: ${({ theme }) => theme.fonts.regular};
+  color: ${({ theme }) => theme.colors.text};
+  text-align: center;
+`;
+
 export const LoadContainer = styled.View`
   flex: 1;
   justify-content: center;
